@@ -1,0 +1,6 @@
+.vs
+build/
+data/
+out
+imgui.ini
+configure.txt

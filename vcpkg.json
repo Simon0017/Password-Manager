@@ -1,0 +1,13 @@
+{
+    "name":"password-manager",
+    "version":"0.0.0",
+    "description":"Application to store and retrieve user's password safely",
+    "dependencies":[
+        "libsodium",
+        "sqlitecpp",
+        "cryptopp",
+        "imgui",
+        "glfw3",
+        "opengl"
+    ]
+}
