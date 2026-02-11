@@ -1,6 +1,7 @@
 #include "login_window.h"
 #include "message_box.h"
 #include "imgui.h"
+#include "ui_manager.h"
 #include <cstring>
 
 LoginWindow::LoginWindow()
@@ -46,7 +47,7 @@ void LoginWindow::Render(bool* p_open)
         
         float buttonWidth = 150.0f;
         float spacing = 20.0f;
-        float totalWidth = (buttonWidth * 2) + spacing;
+        float totalWidth = (buttonWidth * 3) + (spacing * 3);
         ImGui::SetCursorPosX((ImGui::GetWindowWidth() - totalWidth) * 0.5f);
         
         if (ImGui::Button("Login", ImVec2(buttonWidth, 40)))
@@ -79,6 +80,14 @@ void LoginWindow::Render(bool* p_open)
         }
         
         ImGui::SameLine(0, spacing);
+
+        if (ImGui::Button("Register",ImVec2(buttonWidth,40)))
+        {
+            Reset();
+        }
+        
+
+        ImGui::SameLine(0,spacing);
         
         if (ImGui::Button("Cancel", ImVec2(buttonWidth, 40)))
         {

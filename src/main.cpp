@@ -26,8 +26,6 @@ int main(){
         SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE
     );
 
-    cout << "Password backend good to go!!";
-
     // Initialize GLFW
     if (!glfwInit())
         return -1;
@@ -86,7 +84,7 @@ int main(){
     // TODO: Check if user is already logged in (session management)
     // If logged in, set state to MAIN_DASHBOARD
     // Otherwise start with LOGIN screen
-    uiManager.SetAppState(UIManager::AppState::MAIN_DASHBOARD);
+    uiManager.SetAppState(UIManager::AppState::LOGIN);
 
     // Main loop
     while (!glfwWindowShouldClose(window))
