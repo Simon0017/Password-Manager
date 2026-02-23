@@ -1,8 +1,11 @@
 # PASSWORD MANAGER 
 
+![img](https://plus.unsplash.com/premium_photo-1677093906053-037cef85dba4?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)
+
 ## About
 This project is a C++ implementation of a password manager. Designed so that users can store and manage their passwords of different apps and sites. Offers encryption and hashing to protect the passwords. Comes with a graphical user interface designed so that the user can interact freely with the backend.
 
+***Note**: Implementation of the GUI has been hindered by the implementing switching of one window to another.To move forward therefore I have implemeted a CLI to interact with the system. If you are familiar with the DearImgui lib ,I am inviting you to aid in the completion the GUI.*
 ---
 
 ## Features

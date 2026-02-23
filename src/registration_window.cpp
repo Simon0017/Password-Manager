@@ -1,7 +1,14 @@
 #include "registration_window.h"
 #include "message_box.h"
 #include "imgui.h"
+#include "models.hpp"
+#include <string>
+#include "crypto_manager.hpp"
+#include "db_manager.hpp"
+#include "password_helpers.hpp"
 #include <cstring>
+#include<SQLiteCpp/SQLiteCpp.h>
+#include<SQLiteCpp/VariadicBind.h>
 
 RegistrationWindow::RegistrationWindow()
     : m_showPassword(false), m_showConfirmPassword(false)
@@ -85,26 +92,50 @@ void RegistrationWindow::Render(bool* p_open)
             {
                 MessageBox::Show("Error", "Password cannot be empty", MessageBox::ERROR_MSG);
             }
+            else if (!passes_password_test(m_password))
+            {
+               
+                PasswordVerifier data = verify_password(m_password);
+                string errMsgs;
+
+                for (auto & msg : data.error_message)
+                {
+                    errMsgs += msg + "\n";
+                }
+                
+                MessageBox::Show("Error", errMsgs, MessageBox::ERROR_MSG);
+            }
+            
             else if (strcmp(m_password, m_confirmPassword) != 0)
             {
                 MessageBox::Show("Error", "Passwords do not match", MessageBox::ERROR_MSG);
             }
             else
             {
-                // TODO: Insert your registration logic here
-                // User user;
-                // user.username = m_username;
-                // user.email = m_email;
-                // user.address = m_address;
-                // Hash password and store in user.password_hash
-                // Generate encryption key and store in user.key
-                // Save user to database
-                // On success:
-                // MessageBox::Show("Success", "Registration successful! Please login.", MessageBox::SUCCESS);
-                // Reset();
-                // *p_open = false;
                 
-                MessageBox::Show("Info", "Registration logic not implemented yet", MessageBox::INFO);
+                User user;
+                user.username = m_username;
+                user.email = m_email;
+                user.address = m_address;
+
+                PasswordHandlers pwd;
+                string password_hash = pwd.hash_password(m_password);
+                user.password_hash = password_hash;
+
+                DataEncryptionDecrytption KeyGen;
+                KeyGen.store_key(KeyGen.generate_key());
+
+                db_manager DBManager;
+                SQLite::Database db(
+                    "data/passwords.db",
+                    SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE
+                );
+
+                DBManager.register_user(user,db);
+                
+                MessageBox::Show("Success", "Registration successful! Please login.", MessageBox::SUCCESS);
+                Reset();
+                *p_open = false;
             }
         }
         

@@ -1,5 +1,7 @@
 #include<sodium.h>
 #include<vector>
+#include <fstream>
+#include<iostream>
 
 #include<cryptopp/aes.h>
 #include<cryptopp/gcm.h>
@@ -41,6 +43,8 @@ constexpr size_t IV_SIZE = 12;
 
 vector<unsigned char> DataEncryptionDecrytption::generate_key(){
     vector<unsigned char> key(32,0x42);
+    randombytes_buf(key.data(), key.size());
+    
     return key;
 }
 
@@ -111,4 +115,47 @@ string DataEncryptionDecrytption::decrypt(EncryptedData& data,vector<unsigned ch
     }
     
     return originaltxt;
+}
+
+void DataEncryptionDecrytption::store_key(vector<unsigned char> key){
+    
+    ofstream key_file("data/key.txt");
+
+    if (key_file.is_open())
+    {
+        for (auto& byte : key)
+        {
+            key_file << byte;
+        }
+
+        key_file.close();
+        
+    }else
+    {
+        cerr << "Error opening the file\n"; 
+    }
+    
+    
+};
+
+vector<unsigned char> DataEncryptionDecrytption::load_key(){
+    vector<unsigned char> key;
+    ifstream key_file("data/key.txt");
+
+    if (key_file.is_open())
+    {
+        unsigned char byte;
+        while (key_file >> byte)
+        {
+            key.push_back(byte);
+        }
+
+        key_file.close();
+        
+    }else
+    {
+        cerr << "Error opening the file\n"; 
+    }
+
+    return key;
 }

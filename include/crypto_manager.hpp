@@ -29,6 +29,8 @@ public:
     ~DataEncryptionDecrytption(){}
 
     vector<unsigned char> generate_key();
+    void store_key(vector<unsigned char> key);
+    vector<unsigned char> load_key();
     EncryptedData encrypt(string& plaintxt,vector<unsigned char>& key);
     string decrypt(EncryptedData& data,vector<unsigned char>& key);
 };

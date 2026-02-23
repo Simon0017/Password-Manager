@@ -4,6 +4,14 @@
 #include "ui_manager.h"
 #include <cstring>
 
+#include "models.hpp"
+#include <string>
+#include "crypto_manager.hpp"
+#include "db_manager.hpp"
+
+#include<SQLiteCpp/SQLiteCpp.h>
+#include<SQLiteCpp/VariadicBind.h>
+
 LoginWindow::LoginWindow()
     : m_showPassword(false)
 {
@@ -63,19 +71,33 @@ void LoginWindow::Render(bool* p_open)
             }
             else
             {
-                // TODO: Insert your login logic here
-                // Verify username and password against database
-                // Hash the entered password and compare with stored hash
-                // On success:
-                // Load user data and encryption key
-                // MessageBox::Show("Success", "Login successful!", MessageBox::SUCCESS);
-                // Switch to main dashboard
-                // Reset();
-                // *p_open = false;
-                // On failure:
-                // MessageBox::Show("Error", "Invalid username or password", MessageBox::ERROR_MSG);
                 
-                MessageBox::Show("Info", "Login logic not implemented yet", MessageBox::INFO);
+
+                db_manager DBManager;
+                SQLite::Database db(
+                    "data/passwords.db",
+                    SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE
+                );
+
+                
+                User user = DBManager.get_user(m_username,db);
+                
+                // verify password
+                PasswordHandlers pwd;
+                bool is_valid = pwd.verify_password(user.password_hash,m_password);
+                
+                if (is_valid)
+                {
+                  // Load user data and encryption key
+                    MessageBox::Show("Success", "Login successful!", MessageBox::SUCCESS);  
+                    Reset();
+                    *p_open = false;
+                }
+                else
+                {
+                    MessageBox::Show("Error", "Invalid username or password", MessageBox::ERROR_MSG);
+                    Reset();
+                }
             }
         }
         

@@ -8,6 +8,8 @@
         "cryptopp",
         "imgui",
         "glfw3",
-        "opengl"
+        "opengl",
+        "argumentum",
+        "fmt"
     ]
 }

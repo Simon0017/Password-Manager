@@ -12,17 +12,17 @@ void db_manager::create_relations(SQLite::Database& db){
     try
     {
         db.exec(R"(
-            CREATE TABLE IF NOT EXIST user(
+            CREATE TABLE IF NOT EXISTS users(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE NOT NULL,
             email TEXT,
             address TEXT,
-            password_hash TEXT NOT NULL,
+            password_hash TEXT NOT NULL
             );
         )");
 
         db.exec(R"(
-            CREATE TABLE IF NOT EXIST password_store(
+            CREATE TABLE IF NOT EXISTS password_store(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
             site TEXT NOT NULL,
@@ -37,17 +37,18 @@ void db_manager::create_relations(SQLite::Database& db){
     catch(const std::exception& e)
     {
         std::cerr << e.what() << '\n';
+        throw;
     }
     
 }
 
 
-User db_manager::register_user(User info,SQLite::Database& db){
+void db_manager::register_user(User info,SQLite::Database& db){
     try
     {
         SQLite::Statement insertuser(
             db,
-            "INSERT INTO user (username,email,address,password_hash) VALUES (?,?,?,?)"
+            "INSERT INTO users (username,email,address,password_hash) VALUES (?,?,?,?)"
         );
 
         insertuser.bind(1,info.username);
@@ -56,11 +57,11 @@ User db_manager::register_user(User info,SQLite::Database& db){
         insertuser.bind(4,info.password_hash);
         insertuser.exec();
 
-        return info;
     }
     catch(const std::exception& e)
     {
         std::cerr << e.what() << '\n';
+        throw;
     }
     
 }
@@ -69,7 +70,7 @@ User db_manager::register_user(User info,SQLite::Database& db){
 User db_manager::get_user(string uname,SQLite::Database& db){
     SQLite::Statement query(
         db,
-        "SELECT id,username,email,address,password_hash FROM user WHERE username = ?"
+        "SELECT id,username,email,address,password_hash FROM users WHERE username = ?"
     );
 
     query.bind(1,uname);
@@ -96,7 +97,7 @@ bool db_manager::change_user_password(string uname,string new_pass,SQLite::Datab
     {
         SQLite::Statement update_pwd(
             db,
-            "UPDATE user SET password_hash = ? WHERE username = ?"
+            "UPDATE users SET password_hash = ? WHERE username = ?"
         );
 
         update_pwd.bind(1,new_pass);
@@ -109,6 +110,7 @@ bool db_manager::change_user_password(string uname,string new_pass,SQLite::Datab
     {
         std::cerr << e.what() << '\n';
         return false;
+        throw;
     }
     
 }
@@ -119,7 +121,7 @@ bool db_manager::delete_user(string uname,SQLite::Database& db){
     {
         SQLite::Statement del_user(
             db,
-            "DELETE FROM user WHERE username = ?"
+            "DELETE FROM users WHERE username = ?"
         );
 
         del_user.bind(1,uname);
@@ -132,6 +134,7 @@ bool db_manager::delete_user(string uname,SQLite::Database& db){
     {
         std::cerr << e.what() << '\n';
         return false;
+        throw;
     }
     
 }
@@ -157,7 +160,7 @@ bool db_manager::insert_password(PasswordStore info,User user_info,SQLite::Datab
     catch(const std::exception& e)
     {
         std::cerr << e.what() << '\n';
-        return false;
+        throw;
     }
     
 }
@@ -184,6 +187,7 @@ bool db_manager::change_password(PasswordStore old_info,EncryptedData new_pass_i
     {
         std::cerr << e.what() << '\n';
         return false;
+        throw;
     }
     
 }
@@ -205,7 +209,7 @@ bool db_manager::delete_password(PasswordStore info,SQLite::Database& db){
     catch(const std::exception& e)
     {
         std::cerr << e.what() << '\n';
-        return false;
+        throw;
     }
     
 }
@@ -245,6 +249,7 @@ PasswordStore db_manager::view_password(string site,SQLite::Database& db){
     catch(const std::exception& e)
     {
         std::cerr << e.what() << '\n';
+        throw;
     }
     
 }
@@ -287,6 +292,7 @@ std::vector<PasswordStore> db_manager:: view_passwords(SQLite::Database& db){
     catch(const std::exception& e)
     {
         std::cerr << e.what() << '\n';
+        throw;
     }
     
 

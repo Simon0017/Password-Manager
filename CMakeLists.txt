@@ -19,6 +19,7 @@ add_executable(password_manager
                 src/edit_password_window.cpp
                 src/user_management_window.cpp
                 src/message_box.cpp
+                src/cli_input.cpp
 )
 
 # c++ starndard
@@ -32,6 +33,8 @@ find_package(cryptopp CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package(fmt CONFIG REQUIRED)
+find_package(argumentum CONFIG REQUIRED)
 
 # link libraries
 target_link_libraries(password_manager
@@ -42,6 +45,8 @@ target_link_libraries(password_manager
         imgui::imgui
         glfw
         OpenGL::GL
+        fmt::fmt
+        Argumentum::argumentum
 )
 
 
